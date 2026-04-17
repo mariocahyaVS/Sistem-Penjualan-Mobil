@@ -17,11 +17,9 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
-            /* Padding default untuk Mobile (tanpa pita atas) */
             padding-top: 76px;
         }
 
-        /* Padding khusus Desktop (karena ada pita atas, header jadi lebih tinggi) */
         @media (min-width: 992px) {
             body {
                 padding-top: 114px;
@@ -48,7 +46,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Garis Bawah Merah */
         .nav-link::after {
             content: '';
             position: absolute;
@@ -72,7 +69,7 @@
             color: #EA5555 !important;
         }
 
-        /* KOTAK SEARCH MINIMALIS */
+        /* SEARCH INPUT */
         .search-input-custom {
             border: none;
             border-bottom: 2px solid #001437;
@@ -84,14 +81,24 @@
         .search-input-custom:focus {
             box-shadow: none;
             border-bottom: 2px solid #EA5555;
-            background: transparent;
         }
 
-        .btn-search-custom {
-            border: none;
-            border-bottom: 2px solid #001437;
-            border-radius: 0;
-            background: transparent;
+        /* DROPDOWN MENU STYLE */
+        .dropdown-menu {
+            border-radius: 15px;
+            padding: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .dropdown-item {
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f1f4f9;
             color: #EA5555;
         }
     </style>
@@ -100,7 +107,6 @@
 <body>
 
     <header class="fixed-top bg-white shadow-sm">
-
         <div class="py-2 d-none d-lg-block" style="background-color: #001437; font-size: 12px;">
             <div class="container d-flex justify-content-between align-items-center">
                 <div class="text-white-50 fw-medium">
@@ -135,33 +141,66 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mx-auto mt-3 mt-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}#mainCarousel">Beranda</a>
+                        <li class="nav-item"><a class="nav-link" href="{{ url('/') }}#mainCarousel">Beranda</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}#katalog">Katalog Mobil</a>
+                        <li class="nav-item"><a class="nav-link" href="{{ url('/') }}#katalog">Katalog Mobil</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}#promosi">Promosi</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}#berita">Berita</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url('/') }}#promosi">Promosi</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url('/') }}#berita">Berita</a></li>
                     </ul>
 
                     <div class="d-flex align-items-center mt-3 mt-lg-0 gap-3">
                         <button class="btn btn-link text-dark p-0 shadow-none" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#searchBox" aria-expanded="false">
-                            <i class="bi bi-search fs-5 fw-bold" style="transition: 0.3s;"
-                                onmouseover="this.style.color='#EA5555'" onmouseout="this.style.color='#001437'"></i>
+                            data-bs-target="#searchBox">
+                            <i class="bi bi-search fs-5 fw-bold"></i>
                         </button>
 
                         @auth
-                            <a href="{{ auth()->user()->role == 2 ? route('pesanan.saya') : route('backend.beranda') }}"
-                                class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm d-flex align-items-center"
-                                style="background-color: #EA5555; border: none;">
-                                <i class="bi bi-person-circle fs-5 me-2"></i> Akun Saya
-                            </a>
+                            <div class="dropdown">
+                                <button
+                                    class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm d-flex align-items-center dropdown-toggle"
+                                    type="button" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false"
+                                    style="background-color: #EA5555; border: none;">
+                                    <i class="bi bi-person-circle fs-5 me-2"></i>
+                                    {{ strtok(auth()->user()->nama, ' ') }}
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-3"
+                                    aria-labelledby="dropdownUser">
+                                    <li class="px-3 py-2">
+                                        <small class="text-muted d-block"
+                                            style="font-size: 10px; text-transform: uppercase;">Email Terdaftar</small>
+                                        <span class="fw-bold"
+                                            style="color: #001437; font-size: 13px;">{{ auth()->user()->email }}</span>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider opacity-25">
+                                    </li>
+
+                                    @if (auth()->user()->role == 0 || auth()->user()->role == 1)
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('backend.beranda') }}">
+                                                <i class="bi bi-speedometer2 me-2 text-primary"></i> Panel Admin
+                                            </a>
+                                        </li>
+                                    @endif
+
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('pesanan.saya') }}">
+                                            <i class="bi bi-bag-check-fill me-2 text-warning"></i> Pesanan Saya
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <hr class="dropdown-divider opacity-25">
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item text-danger fw-bold" href="{{ route('backend.logout') }}">
+                                            <i class="bi bi-box-arrow-right me-2"></i> Keluar Akun
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         @else
                             <a href="{{ route('login') }}"
                                 class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm d-flex align-items-center"
@@ -183,8 +222,9 @@
                             <div class="d-flex align-items-center w-100">
                                 <input type="text" name="search" value="{{ request('search') }}"
                                     class="form-control shadow-none px-0 py-2 fs-5 search-input-custom"
-                                    placeholder="Ketik model mobil yang Anda cari (Misal: Ertiga)...">
-                                <button type="submit" class="btn shadow-none px-3 py-2 fs-4 btn-search-custom">
+                                    placeholder="Cari mobil impian Anda...">
+                                <button type="submit" class="btn shadow-none px-3 py-2 fs-4"
+                                    style="color: #EA5555;">
                                     <i class="bi bi-search"></i>
                                 </button>
                             </div>
@@ -203,7 +243,6 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // 1. Mematikan animasi loncat saat reload Tab Katalog
             if (window.location.hash) {
                 document.documentElement.style.scrollBehavior = 'auto';
                 setTimeout(() => {
@@ -211,29 +250,23 @@
                 }, 50);
             }
 
-            // 2. LOGIKA SCROLLSPY (Memindahkan Garis Merah Otomatis)
             const navLinks = document.querySelectorAll('.nav-link');
 
             function onScroll() {
                 let scrollPosition = window.scrollY + 150;
-
                 navLinks.forEach(link => {
                     let href = link.getAttribute('href');
                     if (href.includes('#')) {
                         let sectionId = href.split('#')[1];
                         let section = document.getElementById(sectionId);
-
-                        if (section) {
-                            if (section.offsetTop <= scrollPosition && (section.offsetTop + section
-                                    .offsetHeight) > scrollPosition) {
-                                navLinks.forEach(n => n.classList.remove('active-link'));
-                                link.classList.add('active-link');
-                            }
+                        if (section && section.offsetTop <= scrollPosition && (section.offsetTop + section
+                                .offsetHeight) > scrollPosition) {
+                            navLinks.forEach(n => n.classList.remove('active-link'));
+                            link.classList.add('active-link');
                         }
                     }
                 });
             }
-
             window.addEventListener('scroll', onScroll);
             onScroll();
         });
