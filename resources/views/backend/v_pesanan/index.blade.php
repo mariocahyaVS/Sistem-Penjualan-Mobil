@@ -5,6 +5,14 @@
             <h3 class="fw-bold m-0" style="color: #001437; letter-spacing: -0.5px;">Data Pesanan (Booking)</h3>
             <p class="text-muted m-0">Pantau dan kelola pesanan masuk dari pelanggan</p>
         </div>
+        <div class="col-auto">
+            <a href="{{ route('backend.pesanan.pdf') }}" class="btn btn-danger shadow-sm rounded-pill px-4 me-2">
+                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Cetak PDF
+            </a>
+            <a href="{{ route('backend.pesanan.excel') }}" class="btn btn-success shadow-sm rounded-pill px-4">
+                <i class="bi bi-file-earmark-excel-fill me-1"></i> Ekspor Excel
+            </a>
+        </div>
     </div>
 
     @if (session('success'))

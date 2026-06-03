@@ -112,6 +112,8 @@ Route::middleware(['auth', 'role:0,1'])->prefix('backend')->name('backend.')->gr
     // ROUTE DATA PESANAN
     Route::get('/pesanan', [\App\Http\Controllers\Backend\PesananController::class, 'index'])->name('pesanan.index');
     Route::put('/pesanan/{id}/status', [\App\Http\Controllers\Backend\PesananController::class, 'updateStatus'])->name('pesanan.updateStatus');
+    Route::get('/pesanan/cetak-pdf', [\App\Http\Controllers\Backend\PesananController::class, 'cetakPdf'])->name('pesanan.pdf');
+    Route::get('/pesanan/cetak-excel', [\App\Http\Controllers\Backend\PesananController::class, 'cetakExcel'])->name('pesanan.excel');
 });
 
 // BLOK 2: SANGAT RAHASIA - HANYA SUPER ADMIN (Role 1)

@@ -70,7 +70,7 @@ class MobilController extends Controller
     public function update(Request $request, string $id)
     {
         $mobil = Mobil::findOrFail($id);
-        
+
         $request->validate([
             'tipe_id' => 'required',
             'nama_mobil' => 'required',
